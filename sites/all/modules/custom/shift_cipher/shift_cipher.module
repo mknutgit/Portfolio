@@ -94,11 +94,33 @@ function shift_cipher_form_submit($form, &$form_state) {
     //drop phrase to lower case//
     $entered_phrase = strtolower($form_state['values']['phrase']);
     $phrase_split = str_split($entered_phrase);
+    global $letters;
 
+    if($direction == 'left') {
+        $shift_value = -$shift_value;
+    } else {
+        $shift_value = $shift_value;
+    }
 
+    $ciphered_phrase = "";
 
-    $_SESSION['phrase_encrypted'] = $entered_phrase;
-    $form_state['redirect'] = 'shift_cipher_result';
+    foreach($phrase_split as $letter) {
+        if(in_array($letter, $letters)) {
+            $array_key = array_search($letter, $letters);
+            $ciphered_letter = $array_key + $shift_value;
+            //$ciphered_letter value must be 0 - 26 //
+            if($ciphered_letter > 26) {
+                $ciphered_letter -= 26;
+            } elseif ($ciphered_letter < 0) {
+                $ciphered_letter += 26;
+            }
+            $cipher_phrase .= $letters[$ciphered_letter];
+        } else {
+            $ciphered_phrase .= $ciphered_letter;
+        }
+        $_SESSION['phrase_encrypted'] = $ciphered_phrase;
+        $form_state['redirect'] = 'shift_cipher_result';
+    }
 }
 
 function shift_cipher_result() {
