@@ -1,0 +1,5 @@
+name: Shift Cipher
+description: This will encrypt words of phrases using a shift cipher.
+package = My First Module
+core = 7.x
+files[] = shift_cipher.module
