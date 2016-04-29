@@ -1,0 +1,5 @@
+name = Title Case
+description = This will take a user's string of words and convert them to title case - capitalizing letters like we'd find in a book title.
+package = My First Module
+core = 7.x
+files[] = title_case.module

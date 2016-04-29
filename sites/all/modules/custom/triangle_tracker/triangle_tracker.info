@@ -1,0 +1,5 @@
+name = Triangle Tracker
+description = Will determine what kind of triangle you've created
+package = Epicodus Examples
+core = 7.x
+files[] = triangle_tracker.module

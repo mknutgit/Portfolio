@@ -1,0 +1,5 @@
+name = Rock Paper Scissors
+description = This is the famous rock, paper and scissors game.
+package = Epicodus Examples
+core = 7.x
+files[] = rps.module

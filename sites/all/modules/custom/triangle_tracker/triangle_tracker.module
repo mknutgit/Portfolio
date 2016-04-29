@@ -1,0 +1,85 @@
+<?php
+
+function triangle_tracker_menu(){
+    $items['triangle_tracker'] = array(
+        'title' => 'Triangle Tracker',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('triangle_tracker_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['triangle_tracker_result'] = array(
+        'title' => 'Result!',
+        'page callback' => 'triangle_tracker_result',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function triangle_tracker_form() {
+        $form['triangle_container'] = array(
+            '#title' => 'What type of triangle?',
+            '#type' => 'fieldset',
+        );
+        $form['triangle_container']['side1'] = array(
+            '#title' => 'Side One',
+            '#type' => 'textfield',
+            '#description' => t('Please enter a side length'),
+            '#element_validate' => array('element_validate_integer_positive'),
+            '#required' => TRUE,
+        );
+        $form['triangle_container']['side2'] = array(
+            '#title' => 'Side Two',
+            '#type' => 'textfield',
+            '#description' => t('Please enter a side length'),
+            '#element_validate' => array('element_validate_integer_positive'),
+            '#required' => TRUE,
+        );
+        $form['triangle_container']['side3'] = array(
+            '#title' => 'Side Three',
+            '#type' => 'textfield',
+            '#description' => t('Please enter a side length'),
+            '#element_validate' => array('element_validate_integer_positive'),
+            '#required' => TRUE,
+        );
+        $form['triangle_container']['submit'] = array(
+            '#type' => 'submit',
+            '#value' => 'Calculate',
+        );
+
+        return $form;
+}
+
+function triangle_tracker_form_validate($form, &$form_state) {
+    $side1 = $form_state['values']['side1'];
+    $side2 = $form_state['values']['side2'];
+    $side3 = $form_state['values']['side3'];
+
+    if ($side1 + $side2 > $side3 && $side1 + $side3 > $side2 && $side2 + $side3 < $side1) { form_set_error('triangle_container', 'Those sides do not a triangle make');
+    }
+}
+
+
+function triangle_tracker_form_submit($form, &$form_state) {
+    $side1 = $form_state['values']['side1'];
+    $side2 = $form_state['values']['side2'];
+    $side3 = $form_state['values']['side3'];
+
+    if ( $side1 == $side2 && $side1 == $side3){
+      $triangle_tracker_result = "eqilateral";
+    } elseif  ( $side1 != $side2 && $side1 != $side3 && $side2 != $side3){
+     $triangle_tracker_result = "scalene";
+    } else {
+     $triangle_tracker_result = "isosceles";
+   }
+
+
+    $_SESSION['triangle_tracker_output'] = $triangle_tracker_result;
+    $form_state['redirect'] = 'triangle_tracker_result';
+}
+
+function triangle_tracker_result(){
+    $output = $_SESSION['triangle_tracker_output'];
+    return  $output;
+}

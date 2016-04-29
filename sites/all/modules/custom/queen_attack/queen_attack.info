@@ -1,0 +1,5 @@
+name = Queen Attack
+description = can the unimpeded queen take the opposing piece
+package = My First Module
+core = 7.x
+files[] = queen_attack.module

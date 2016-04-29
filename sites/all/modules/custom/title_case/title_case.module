@@ -1,0 +1,60 @@
+<?php
+
+function title_case_menu(){
+    $items['title_case'] = array(
+        'title' => 'Title Case',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('title_case_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['title_case_success'] = array(
+        'title' => 'Success',
+        'page callback' => 'title_case_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function title_case_form() {
+    $form['title_case_goal'] = array(
+        '#title' => 'Title Case Goal',
+        '#type' => 'textfield',
+        '#description' => t('Enter your phrase for to title case'),
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Go',
+    );
+
+    return $form;
+}
+
+function title_case_form_submit($form, &$form_state) {
+
+    $lower_case_input = strtolower($form_state['values']['title_case_goal']);
+    $input_array_of_words = explode(" ", $lower_case_input);
+    $output_titlecased = array();
+    $designated_words = array('a', 'the', 'and', 'for', 'with', 'of', 'to');
+
+    foreach ($input_array_of_words as $key => $value) {
+
+        if (in_array($value, $designated_words) && $key > 0) {
+            array_push($output_titlecased, $value);
+        }
+        else {
+            array_push($output_titlecased, ucfirst($value));
+        }
+    }
+
+    $_SESSION['title_case_output'] = implode(" ", $output_titlecased);
+    $form_state['redirect'] = 'title_case_success';
+}
+
+function title_case_success() {
+    $output = $_SESSION['title_case_output'];
+
+    return $output;
+}

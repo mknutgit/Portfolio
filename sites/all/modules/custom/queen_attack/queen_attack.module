@@ -1,0 +1,75 @@
+<?php
+
+function queen_attack_menu(){
+    $items['queen_attack'] = array(
+        'title' => 'Queen Attack',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('queen_attack_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['queen_attack_result'] = array(
+        'title' => 'Result',
+        'page callback' => 'queen_attack_result',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+
+    return $items;
+}
+
+function queen_attack_form(){
+    $form['queen_column'] = array(
+        '#title' => "Queen's Column",
+        '#type' => 'textfield',
+        '#description' => t("Enter the Queen's Starting Column (1 through 8)"),
+    );
+
+    $form['queen_row'] = array(
+        '#title' => "Queen's Row",
+        '#type' => 'textfield',
+        '#description' => t("Enter the Queen's Starting Row (1 through 8)"),
+    );
+    $form['enemy_column'] = array(
+        '#title' => "Enemy's Column",
+        '#type' => 'textfield',
+        '#description' => t("Enter the Enemys Starting Column (1 through 8)"),
+    );
+    $form['enemy_row'] = array(
+        '#title' => "Enemy's Row",
+        '#type' => 'textfield',
+        '#description' => t("Enter the Enemy's Starting Row (1 through 8)"),
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Attack!',
+    );
+
+    return $form;
+
+}
+
+function queen_attack_form_submit($form, &$form_state){
+    $queen_x = $form_state['values']['queen_column'];
+    $queen_y = $form_state['values']['queen_row'];
+    $enemy_x = $form_state['values']['enemy_column'];
+    $enemy_y = $form_state['values']['enemy_row'];
+
+    $attack_result = " ";
+
+    if(($queen_y === $enemy_y) || ($queen_x === $enemy_x)) {
+        $attack_result = "The Queen can Take the Opposing Piece";
+    } elseif(abs(($queen_y - $enemy_y)/($queen_x - $enemy_x)) === 1){
+        $attack_result = "The Queen can Take the Opposing Piece";
+    } else {
+        $attack_result = "The Queen can NOT Take the Opposing Piece";
+    }
+
+    $_SESSION['queen_attack_output'] = $attack_result;
+    $form_state['redirect'] = 'queen_attack_result';
+}
+
+function queen_attack_result(){
+    $output = $_SESSION['queen_attack_output'];
+    return  $output;
+}

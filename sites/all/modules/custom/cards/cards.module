@@ -1,0 +1,19 @@
+<?php
+    function cards_menu() {
+        $names = array('joe','jason','steve');
+        $items = array();
+        foreach($names as $name) {
+            $items['cards/'.$name] = array(
+                'title' => 'Card to '.$name,
+                'page callback' => "display_card",
+                'page arguments' => array(1),
+                'access callback' => TRUE,
+                'type' => MENU_NORMAL_ITEM,
+            );
+        }
+        return $items;
+    }
+
+    function display_card($name) {
+        return "<p>Hello $name</p>";
+    }

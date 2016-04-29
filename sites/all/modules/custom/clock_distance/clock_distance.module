@@ -1,0 +1,74 @@
+<?php
+
+function clock_distance_menu(){
+    $items['clock_distance'] = array(
+        'title'=> 'Clock Distance',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('clock_distance_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['clock_distance_result'] = array(
+        'title' => 'Angle Result',
+        'page callback'=> 'clock_distance_result',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function clock_distance_form(){
+    $form['hour_hand'] = array(
+        '#title' => 'Hours',
+        '#type'=> 'textfield',
+        '#description' => t('Enter the time for the Hour Hand (1 -12)'),
+    );
+    $form['minute_hand'] = array(
+        '#title' => 'Minutes',
+        '#type'=> 'textfield',
+        '#description' => t('Enter the time for the Minute Hand (0-59)'),
+    );
+    $form['second_hand'] = array(
+        '#title' => 'Seconds',
+        '#type'=> 'textfield',
+        '#description' => t('Enter the time for the Seconds Hand (0-59)'),
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Get the Angle Between the Hour and Minute Hands',
+    );
+     return $form;
+}
+
+function clock_distance_form_submit($form, &$form_state){
+    $hour = $form_state['values']['hour_hand'];
+    $minute = $form_state['values']['minute_hand'];
+    $second = $form_state['values']['second_hand'];
+
+    $minute_degrees = ($minute * 6) + ($second/10);
+    $hour_degrees = 0;
+    if ($hour === 12){
+        $hour_degrees = (($minute*60 + $second)/120);
+    }else{
+        // $hour_degrees = ($hour * 30) + ($minute/2);
+        $hour_degrees = ($hour * 30) + (($minute*60 + $second)/120);
+    }
+
+    if($hour_degrees > $minute_degrees){
+        $difference = $hour_degrees - $minute_degrees;
+    }else{
+        $difference = $minute_degrees - $hour_degrees;
+    }
+
+    if($difference > 180){
+        $difference = 360 - $difference;
+    }
+    $_SESSION['clock_distance_output'] = $difference;
+    $form_state['redirect'] = 'clock_distance_result';
+}
+
+function clock_distance_result(){
+    $output = $_SESSION['clock_distance_output'];
+
+    return $output . ' degrees';
+}

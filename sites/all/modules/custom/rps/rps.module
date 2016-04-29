@@ -1,0 +1,88 @@
+<?php
+
+function rps_menu() {
+    $items['rps_player1'] = array(
+        'title' => 'Rock Paper Scissors',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('rps_player1_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['rps_player2'] = array(
+        'title' => 'Rock Paper Scissors',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('rps_player2_form'),
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    $items['rps_results'] = array(
+        'title' => 'Rock Paper Scissors',
+        'page callback' => 'rps_results',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function rps_player1_form(){
+    $form['choice'] = array(
+        '#title' => 'Player 1! Choose your weapon!',
+        '#type' => 'textfield',
+        '#description' => t('rock, paper, or scissors'),
+        // '#element_validate' => array('element_validate_')
+        '#required' => TRUE,
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Go!',
+    );
+
+    return $form;
+}
+
+function rps_player1_form_submit($form, &$form_state) {
+    $_SESSION['rps_player1_output'] = $form_state['values']['choice'];
+    $form_state['redirect'] = 'rps_player2';
+}
+
+function rps_player2_form(){
+    $form['choice'] = array(
+        '#title' => 'Player 2! Choose your weapon!',
+        '#type' => 'textfield',
+        '#description' => t('rock, paper, or scissors'),
+        // '#element_validate' => array('element_validate_')
+        '#attributes' => array('autofocus'),
+        '#required' => TRUE,
+    );
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Go!',
+    );
+
+    return $form;
+}
+
+function rps_player2_form_submit($form, &$form_state) {
+    $_SESSION['rps_player2_output'] = $form_state['values']['choice'];
+    $form_state['redirect'] = 'rps_results';
+}
+
+function rps_results() {
+    $p1 = $_SESSION['rps_player1_output'];
+    $p2 = $_SESSION['rps_player2_output'];
+    $output = "";
+
+    if ($p1 == $p2) {
+        $output .= "It's a tie!";
+    } elseif ($p1 == 'rock' && $p2 == 'scissors') {
+        $output .= "Player 1 wins!";
+    } elseif ($p1 == 'scissors' && $p2 =='paper') {
+        $output .= "Player 1 wins!";
+    } elseif ($p1 == 'paper' && $p2 =='rock') {
+        $output .= "player 1 wins!";
+    } else {
+        $output .= "player 2 wins!";
+    }
+
+    return $output;
+}

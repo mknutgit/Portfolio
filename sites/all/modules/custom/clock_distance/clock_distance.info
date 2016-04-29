@@ -1,0 +1,5 @@
+name = Clock Distance
+description = enter a time and get the angle between the hands on a clock
+package = My First Module
+core = 7.x
+files[] = clock_distance.module
