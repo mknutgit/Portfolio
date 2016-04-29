@@ -43,6 +43,7 @@ function shift_cipher_form() {
         '#title' => 'Phrase',
         '#type' => 'textfield',
         '#description' => t('Enter a word or phrase'),
+        '#element_validate' => array('element_validate_phrase'),
         '#required' => TRUE,
     );
 
@@ -64,6 +65,14 @@ function element_validate_direction($element) {
     $chosen_direction = strtolower($element['#value']);
     if ($chosen_direction != 'right' && $chosen_direction != 'left') {
         form_error($element, t("Please enter either 'right' or 'left'"));
+    }
+}
+
+function element_validate_phrase($element) {
+    $phrase_input = ($element['#value']);
+
+    if (preg_match('/^[a-zA-Z,.!;:()? ]*$/', $phrase_input) == false) {
+        form_error($element, t('Please only use letters or standard punctuation.'));
     }
 }
 
