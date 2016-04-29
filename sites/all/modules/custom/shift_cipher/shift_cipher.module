@@ -109,14 +109,14 @@ function shift_cipher_form_submit($form, &$form_state) {
             $array_key = array_search($letter, $letters);
             $ciphered_letter = $array_key + $shift_value;
             //$ciphered_letter value must be 0 - 26 //
-            if($ciphered_letter > 26) {
+            if($ciphered_letter > 25) {
                 $ciphered_letter -= 26;
             } elseif ($ciphered_letter < 0) {
                 $ciphered_letter += 26;
             }
-            $cipher_phrase .= $letters[$ciphered_letter];
+            $ciphered_phrase .= $letters[$ciphered_letter];
         } else {
-            $ciphered_phrase .= $ciphered_letter;
+            $ciphered_phrase .= $letter;
         }
         $_SESSION['phrase_encrypted'] = $ciphered_phrase;
         $form_state['redirect'] = 'shift_cipher_result';
