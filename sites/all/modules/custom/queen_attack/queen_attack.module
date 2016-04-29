@@ -19,34 +19,58 @@ function queen_attack_menu(){
 }
 
 function queen_attack_form(){
-    $form['queen_column'] = array(
+    $form['queen_attack'] = array(
+        '#title' => 'Queen Attack',
+        '#type' => 'fieldset',
+    );
+    $form['queen_attack']['queen_column'] = array(
         '#title' => "Queen's Column",
         '#type' => 'textfield',
         '#description' => t("Enter the Queen's Starting Column (1 through 8)"),
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_queen_range'),
+        '#required' => TRUE,
     );
 
-    $form['queen_row'] = array(
+    $form['queen_attack']['queen_row'] = array(
         '#title' => "Queen's Row",
         '#type' => 'textfield',
         '#description' => t("Enter the Queen's Starting Row (1 through 8)"),
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_queen_range'),
+        '#required' => TRUE,
     );
-    $form['enemy_column'] = array(
+    $form['queen_attack']['enemy_column'] = array(
         '#title' => "Enemy's Column",
         '#type' => 'textfield',
         '#description' => t("Enter the Enemys Starting Column (1 through 8)"),
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_queen_range'),
+        '#required' => TRUE,
     );
-    $form['enemy_row'] = array(
+    $form['queen_attack']['enemy_row'] = array(
         '#title' => "Enemy's Row",
         '#type' => 'textfield',
         '#description' => t("Enter the Enemy's Starting Row (1 through 8)"),
+        '#element_validate' => array('element_validate_integer_positive', 'element_validate_queen_range'),
+        '#required' => TRUE,
     );
-    $form['submit'] = array(
+    $form['queen_attack']['submit'] = array(
         '#type' => 'submit',
         '#value' => 'Attack!',
     );
 
     return $form;
 
+}
+
+function element_validate_queen_range($element) {
+    if ($element['#value'] < 1 || $element['#value'] > 8) {
+        form_error($element, t('Number must be greater then 0 and less than 8'));
+    }
+}
+
+function queen_attack_form_validate($form, &$form_state) {
+  if ($form_state['values']['queen_column'] == $form_state['values']['enemy_column'] && $form_state['values']['queen_row'] == $form_state['values']['enemy_row']) {
+      form_set_error('queen_attack', 'They cannot be on the same location!');
+  }
 }
 
 function queen_attack_form_submit($form, &$form_state){

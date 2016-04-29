@@ -4,30 +4,64 @@ function shift_cipher_menu() {
     $items['shift_cipher'] = array(
         'title' => 'Shift Cipher',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array()('shift_cipher_form'),
+        'page arguments' => array('shift_cipher_form'),
         'access callback' => TRUE,
-        'type' => MENU_NORMAl_ITEM,
+        'type' => MENU_NORMAL_ITEM,
     );
-    $items['shift_cipher_success'] = array(
-        'title' => 'success',
-        'page callback' => 'sum_success',
+    $items['shift_cipher_result'] = array(
+        'title' => 'Results',
+        'page callback' => 'shift_cipher_result',
         'access callback' => TRUE,
         'type' => MENU_CALLBACK,
     );
-    return $itmes;
+    return $items;
 }
 
 function shift_cipher_form() {
     $form['shift_cipher_container'] = array(
-        'title' => 'Shift Cipher encryption',
+        '#title' => 'Shift Cipher encryption',
         '#type' => 'fieldset',
     );
-    $form['shift_cipher_container']['shift value'] = array(
+
+    $form['shift_cipher_container']['shift_value'] = array(
         '#title' => 'Shift Value',
         '#type' => 'textfield',
         '#description' => t('Enter a value between 1 and 26'),
-        'element_validate' => array('element_validate_integer_positive'),
         '#required' => TRUE,
+    );
 
-    )
+    $form['shift_cipher_container']['direction'] = array(
+        '#title' => 'Direction',
+        '#type' => 'textfield',
+        '#description' => t('Shift left or right?'),
+        '#required' => TRUE,
+    );
+
+    $form['shift_cipher_container']['phrase'] = array(
+        '#title' => 'Phrase',
+        '#type' => 'textfield',
+        '#description' => t('Enter a word or phrase'),
+        '#required' => TRUE,
+    );
+
+    $form['shift_cipher_container']['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'Go!',
+    );
+
+    return $form;
+}
+
+function shift_cipher_form_submit($form, &$form_state) {
+    $shift_value = $form_state['values']['shift_value'];
+    $direction = $form_state['values']['direction'];
+    $entered_phrase = $form_state['values']['phrase'];
+
+    $_SESSION['phrase_encrypted'] = $entered_phrase;
+    $form_state['redirect'] = 'shift_cipher_result';
+}
+
+function shift_cipher_result() {
+    $encrypted_phrase = $_SESSION['phrase_encrypted'];
+    return $encrypted_phrase;
 }
