@@ -38,7 +38,7 @@ function shift_cipher_form() {
     $form['shift_cipher_container']['shift_value'] = array(
         '#title' => 'Shift Value',
         '#type' => 'textfield',
-        '#description' => t('Enter a value between 1 and 26'),
+        '#description' => t('Enter a value between 1 and 25'),
         '#element_validate' => array('element_validate_integer_positive', 'element_validate_shift_range'),
         '#required' => TRUE,
     );
