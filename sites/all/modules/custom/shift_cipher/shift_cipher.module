@@ -68,8 +68,8 @@ function shift_cipher_form() {
 }
 
 function element_validate_shift_range($element) {
-    if ($element['#value'] < 1 || $element['#value'] > 26) {
-        form_error($element, t('Shift must be a number between 1 and 26'));
+    if ($element['#value'] < 1 || $element['#value'] > 25) {
+        form_error($element, t('Shift must be a number between 0 and 25'));
     }
 }
 
@@ -82,7 +82,7 @@ function element_validate_direction($element) {
 
 function element_validate_phrase($element) {
     $phrase_input = ($element['#value']);
-
+    //ensures only letters and standard punctuation are entered//
     if (preg_match('/^[a-zA-Z,.!;:()? ]*$/', $phrase_input) == false) {
         form_error($element, t('Please only use letters or standard punctuation!'));
     }
@@ -94,6 +94,7 @@ function shift_cipher_form_submit($form, &$form_state) {
     //drop phrase to lower case//
     $entered_phrase = strtolower($form_state['values']['phrase']);
     $phrase_split = str_split($entered_phrase);
+    //utilize global variable array//
     global $letters;
 
     if($direction == 'left') {
@@ -108,7 +109,7 @@ function shift_cipher_form_submit($form, &$form_state) {
         if(in_array($letter, $letters)) {
             $array_key = array_search($letter, $letters);
             $ciphered_letter = $array_key + $shift_value;
-            //$ciphered_letter value must be 0 - 26 //
+            //$ciphered_letter value must be 0 - 25, //
             if($ciphered_letter > 25) {
                 $ciphered_letter -= 26;
             } elseif ($ciphered_letter < 0) {
