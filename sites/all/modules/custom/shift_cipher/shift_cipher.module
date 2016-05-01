@@ -38,7 +38,7 @@ function shift_cipher_form() {
     $form['shift_cipher_container']['shift_value'] = array(
         '#title' => 'Shift Value',
         '#type' => 'textfield',
-        '#description' => t('Enter a value between 1 and 51'),
+        '#description' => t('Enter a value between 1 and 10,000'),
         '#element_validate' => array('element_validate_integer_positive', 'element_validate_shift_range'),
         '#required' => TRUE,
     );
@@ -68,8 +68,8 @@ function shift_cipher_form() {
 }
 
 function element_validate_shift_range($element) {
-    if ($element['#value'] < 1 || $element['#value'] > 100 ) {
-        form_error($element, t('Shift must be a number between 0 and 51'));
+    if ($element['#value'] < 1 || $element['#value'] > 10000 ) {
+        form_error($element, t('Shift must be a number between 1 and 10,000'));
     }
 }
 
@@ -103,11 +103,15 @@ function shift_cipher_form_submit($form, &$form_state) {
         $shift_value = $shift_value;
     }
 
-    if ($shift_value > 51 || $shift_value < -51) {
-      $shift_value = fmod($shift_value, 25);
+    //// Gets whole remainder to allow for shifts exceeding 51 to the right and 26 to the left /////
+    if ($shift_value > 51) {
+      $shift_value = fmod($shift_value, 26);
+    } else if($shift_value < -26) {
+      $shift_value = fmod($shift_value, 26);
+    } else {
+      $shift_value;
     }
     echo($shift_value);
-
 
     $ciphered_phrase = "";
 
